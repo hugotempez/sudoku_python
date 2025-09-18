@@ -1,16 +1,21 @@
-# This is a sample Python script.
+from Game import Game
+from Player import Player
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    while True:
+        player = Player(input("Enter your name: "))
+        game = Game()
+        while not game.is_over():
+            x: int|None = None
+            y: int|None = None
+            value: int|None = None
+            while x is None and y is None and value is None:
+                try:
+                    x = int(input("Enter your x: "))
+                    y = int(input("Enter your y: "))
+                    value = int(input("Enter your value: "))
+                except ValueError:
+                    print("Les valeurs fournies ne sont pas valides")
+            print("ici")
+            print(game.play(player, x, y, value))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
