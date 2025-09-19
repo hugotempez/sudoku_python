@@ -1,3 +1,5 @@
+import random
+
 from Player import Player
 
 class Game:
@@ -14,10 +16,12 @@ class Game:
             [None, None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None, None]
         ]
+        self._generated: list[list[int]] = []
         self._turn: int = 0
         self._is_over: bool = False
         self._is_solved: bool = False
         self._winner: Player|None = None
+        self._generate_board()
         self.print_board()
 
 
@@ -25,7 +29,7 @@ class Game:
     def _generate_board(self, difficulty: str = "done"):
         if difficulty == "done":
             number = 81
-        if difficulty == "easy":
+        elif difficulty == "easy":
             number = 60
         elif difficulty == "merdium":
             number = 40
@@ -33,11 +37,26 @@ class Game:
             number = 20
         else:
             return
-        already_generated: list[list[int]] = []
-        for num in range(number):
-            for row in self._board:
-                for col in row:
-                    continue
+        random_tuple = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        random.shuffle(random_tuple)
+        random_y = random.randint(0, 8)
+        self._board[random_y] = random_tuple
+        for i in range(len(self._board)):
+            if self._board[i][0] is not None:
+                for j in range(len(self._board[i])):
+                    possibilities = self._get_possibilities_for_coordinates(j, i)
+
+
+
+
+    """Pour un set de coordonnées x y passé en paramètre, renvoi une list de toute les valeurs possible"""
+    def _get_possibilities_for_coordinates(self, x: int, y: int) -> list:
+        number_set = (1, 2, 3, 4, 5, 6, 7, 8, 9)
+        returned_set = list()
+        for num in number_set:
+            if self._check_if_valid(x, y, num):
+                returned_set.append(num)
+        return returned_set
 
 
     """Vérifie si une valeur qu'on place a une position [x, y] est 
@@ -52,8 +71,8 @@ class Game:
             if self._board[i][x] == value:
                 return False
         #Check dans le carré 3x3
-        x_start = (x//3) * 3
-        y_start = (y//3) * 3
+        x_start: int = (x//3) * 3
+        y_start: int = (y//3) * 3
         for i in range(3):
             for j in range(3):
                 if self._board[y_start + j][x_start + i] == value:

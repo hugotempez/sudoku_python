@@ -16,6 +16,6 @@ if __name__ == '__main__':
                     value = int(input("Enter your value: "))
                 except ValueError:
                     print("Les valeurs fournies ne sont pas valides")
-            print("ici")
+            #print("ici")
             print(game.play(player, x, y, value))
 
