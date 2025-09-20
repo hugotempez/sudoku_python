@@ -37,16 +37,38 @@ class Game:
             number = 20
         else:
             return
-        random_tuple = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        random.shuffle(random_tuple)
-        random_y = random.randint(0, 8)
-        self._board[random_y] = random_tuple
-        for i in range(len(self._board)):
-            if self._board[i][0] is not None:
-                for j in range(len(self._board[i])):
-                    possibilities = self._get_possibilities_for_coordinates(j, i)
-
-
+        is_done: bool = False
+        has_backtracked: bool = False
+        row: int = 0
+        column: int = 0
+        while not is_done:
+            possibilities = self._get_possibilities_for_coordinates(column, row)
+            if len(possibilities) == 1 and possibilities[0] == self._board[row][column] and has_backtracked:
+                self._board[row][column] = None
+                column -= 1
+                has_backtracked = True
+                if column == 0:
+                    row -= 1
+                    column = len(self._board) - 1
+            elif len(possibilities) == 0:
+                print("backtracked")
+                print(len(possibilities), (len(self._board[row]) - column), column)
+                column -= 1
+                has_backtracked = True
+                if column == 0:
+                    row -= 1
+                    column = len(self._board) - 1
+            else:
+                print("row {} col {} poss {}".format(row, column, possibilities))
+                print(self._board[row])
+                self._board[row][column] = possibilities[random.randint(0, len(possibilities) - 1)]
+                column += 1
+                has_backtracked = False
+                if column == len(self._board):
+                    column = 0
+                    row += 1
+            if column == len(self._board) - 1 and row == len(self._board) - 1:
+                is_done = True
 
 
     """Pour un set de coordonnées x y passé en paramètre, renvoi une list de toute les valeurs possible"""
@@ -102,12 +124,18 @@ class Game:
 
     """Affiche la grille de jeu dans la console"""
     def print_board(self):
-        print("  -   -   -   -   -   -   -   -   -")
+        print("  =   =   =   =   =   =   =   =   =")
         for i in range(len(self._board)):
-            print("|", end="")
+            print("‖", end="")
             for j in range(len(self._board[i])):
-                print(" {} |".format(self._board[i][j] or " "), end="")
-            print("\n  -   -   -   -   -   -   -   -   -")
+                if (j + 1) % 3 == 0:
+                    print(" {} ‖".format(self._board[i][j] or " "), end="")
+                else:
+                    print(" {} |".format(self._board[i][j] or " "), end="")
+            if (i + 1) % 3 == 0:
+                print("\n  =   =   =   =   =   =   =   =   =")
+            else:
+                print("\n  -   -   -   -   -   -   -   -   -")
 
 
     """Getter pour le champ is_over"""
