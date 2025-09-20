@@ -41,6 +41,7 @@ class Game:
         has_backtracked: bool = False
         row: int = 0
         column: int = 0
+        #marche pas
         while not is_done:
             possibilities = self._get_possibilities_for_coordinates(column, row)
             if len(possibilities) == 1 and possibilities[0] == self._board[row][column] and has_backtracked:
